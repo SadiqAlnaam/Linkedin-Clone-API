@@ -1,8 +1,10 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 import { sendWelcomEmail } from "../emails/emailHandlers.js";
 
+dotenv.config();
 export const signup = async (req, res) => {
     try {
         const { name, username, email, password } = req.body;
@@ -80,7 +82,16 @@ export const login = async (req, res) => {
         res.json({ message: "server error" });
     }
 }
-export function logout(req, res) {
+export const logout = (req, res) => {
     res.clearCookie("jwt-linkenin");
     res.json({ message: "Logged out sucessfully" });
+}
+
+export const getCurrentUser = (req, res) => {
+    try {
+        res.json(req.user);
+    } catch (error) {
+        console.log("Error in getCurrentUse controller", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
 }
